@@ -161,14 +161,14 @@ export default function PesoPage() {
             </div>
           )}
 
-          {ultimosPesos.map((item, index) => (
-            <div
-              key={index}
-              className="text-center text-xl font-bold"
-            >
-              {item.peso} kg
-            </div>
-          ))}
+         {ultimosPesos.map((item, index) => (
+  <div
+    key={index}
+    className="text-center text-lg font-bold"
+  >
+    {item.cortadores?.nome} - {item.peso} kg
+  </div>
+))}
         </div>
 
         <input
