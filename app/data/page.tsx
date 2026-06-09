@@ -63,7 +63,7 @@ export default function DataPage() {
           NOVO LANÇAMENTO
         </button>
 
-        {usuario?.perfil === "adm" && (
+       {usuario?.perfil?.toLowerCase() === "admin" && (
           <button
             onClick={abrirRelatorios}
             className="w-full mt-4 bg-blue-700 text-white rounded-2xl p-5 text-2xl font-bold"
