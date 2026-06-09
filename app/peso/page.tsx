@@ -46,11 +46,16 @@ export default function PesoPage() {
 
   async function carregarUltimosPesos(cortadorId: number) {
     const { data } = await supabase
-      .from("lancamentos")
-      .select("peso")
-      .eq("cortador_id", cortadorId)
-      .order("created_at", { ascending: false })
-      .limit(2);
+  .from("lancamentos")
+  .select(`
+    peso,
+    cortadores (
+      nome
+    )
+  `)
+  .eq("cortador_id", cortadorId)
+  .order("created_at", { ascending: false })
+  .limit(2);
 
     if (data) {
       setUltimosPesos(data);
