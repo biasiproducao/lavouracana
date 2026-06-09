@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function DataPage() {
@@ -9,6 +9,18 @@ export default function DataPage() {
   const hoje = new Date().toISOString().split("T")[0];
 
   const [dataSelecionada, setDataSelecionada] = useState(hoje);
+  const [usuario, setUsuario] = useState<any>(null);
+
+  useEffect(() => {
+    const usuarioStorage = localStorage.getItem("usuario");
+
+    if (!usuarioStorage) {
+      router.push("/");
+      return;
+    }
+
+    setUsuario(JSON.parse(usuarioStorage));
+  }, [router]);
 
   function continuar() {
     localStorage.setItem(
@@ -19,11 +31,15 @@ export default function DataPage() {
     router.push("/propriedade");
   }
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+  function abrirRelatorios() {
+    router.push("/relatorios");
+  }
 
-        <h1 className="text-3xl font-bold text-center mb-2">
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="bg-white border rounded-2xl shadow-xl p-8 w-full max-w-md">
+
+        <h1 className="text-3xl font-bold text-center mb-2 text-black">
           Selecione a Data
         </h1>
 
@@ -42,10 +58,19 @@ export default function DataPage() {
 
         <button
           onClick={continuar}
-          className="w-full bg-green-700 text-white rounded-2xl p-5 text-2xl font-bold"
+          className="w-full bg-black text-white rounded-2xl p-5 text-2xl font-bold"
         >
-          CONTINUAR
+          NOVO LANÇAMENTO
         </button>
+
+        {usuario?.perfil === "adm" && (
+          <button
+            onClick={abrirRelatorios}
+            className="w-full mt-4 bg-blue-700 text-white rounded-2xl p-5 text-2xl font-bold"
+          >
+            📊 RELATÓRIOS
+          </button>
+        )}
 
       </div>
     </div>
