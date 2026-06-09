@@ -11,8 +11,8 @@ type Propriedade = {
 
 export default function PropriedadePage() {
   const [propriedades, setPropriedades] = useState<Propriedade[]>([]);
-  const [mostrarOutros, setMostrarOutros] = useState(false);
-  const [nomeOutro, setNomeOutro] = useState("");
+  const [mostrarOutro, setMostrarOutro] = useState(false);
+  const [nomeCanavial, setNomeCanavial] = useState("");
 
   const router = useRouter();
 
@@ -37,20 +37,30 @@ export default function PropriedadePage() {
       JSON.stringify(propriedade)
     );
 
+    localStorage.setItem(
+      "canavial",
+      propriedade.nome
+    );
+
     router.push("/cortador");
   }
 
   function salvarOutro() {
-    if (!nomeOutro.trim()) {
+    if (!nomeCanavial.trim()) {
       alert("Digite o nome do canavial");
       return;
     }
 
     localStorage.setItem(
+      "canavial",
+      nomeCanavial.trim()
+    );
+
+    localStorage.setItem(
       "propriedade",
       JSON.stringify({
         id: 0,
-        nome: nomeOutro.trim(),
+        nome: "OUTROS"
       })
     );
 
@@ -59,8 +69,9 @@ export default function PropriedadePage() {
 
   return (
     <div className="min-h-screen bg-white p-4">
-      <h1 className="text-3xl font-bold text-center text-black mb-6">
-        Escolha a Propriedade
+
+      <h1 className="text-3xl font-bold text-center mb-6">
+        Escolha o Canavial
       </h1>
 
       <div className="grid gap-4">
@@ -68,7 +79,9 @@ export default function PropriedadePage() {
         {propriedades.map((propriedade) => (
           <button
             key={propriedade.id}
-            onClick={() => selecionarPropriedade(propriedade)}
+            onClick={() =>
+              selecionarPropriedade(propriedade)
+            }
             className="bg-black text-white text-2xl font-bold p-6 rounded-2xl shadow-lg"
           >
             {propriedade.nome}
@@ -76,34 +89,39 @@ export default function PropriedadePage() {
         ))}
 
         <button
-          onClick={() => setMostrarOutros(!mostrarOutros)}
-          className="bg-gray-700 text-white text-2xl font-bold p-6 rounded-2xl shadow-lg"
+          onClick={() =>
+            setMostrarOutro(!mostrarOutro)
+          }
+          className="bg-blue-700 text-white text-2xl font-bold p-6 rounded-2xl shadow-lg"
         >
           OUTROS
         </button>
 
-        {mostrarOutros && (
-          <div className="border rounded-2xl p-4 bg-gray-100">
+        {mostrarOutro && (
+          <div className="bg-gray-100 rounded-2xl p-4">
 
             <input
               type="text"
-              placeholder="Nome do canavial"
-              value={nomeOutro}
-              onChange={(e) => setNomeOutro(e.target.value)}
-              className="w-full border-2 border-gray-300 rounded-xl p-4 text-xl mb-4"
+              placeholder="Nome do Canavial"
+              value={nomeCanavial}
+              onChange={(e) =>
+                setNomeCanavial(e.target.value)
+              }
+              className="w-full border rounded-xl p-4 mb-4"
             />
 
             <button
               onClick={salvarOutro}
-              className="w-full bg-black text-white rounded-xl p-4 text-xl font-bold"
+              className="w-full bg-green-700 text-white p-4 rounded-xl font-bold"
             >
-              CONTINUAR
+              SALVAR
             </button>
 
           </div>
         )}
 
       </div>
+
     </div>
   );
 }
