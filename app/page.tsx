@@ -2,61 +2,73 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../lib/supabase";
 
-export default function DataPage() {
+export default function Home() {
+  const [codigo, setCodigo] = useState("");
+  const [mensagem, setMensagem] = useState("");
   const router = useRouter();
 
-  const hoje = new Date().toISOString().split("T")[0];
+  async function entrar() {
+    setMensagem("");
 
-  const [dataSelecionada, setDataSelecionada] = useState(hoje);
+    const { data, error } = await supabase
+      .from("usuarios")
+      .select("*")
+      .eq("codigo_acesso", codigo.trim());
 
-  function novoLancamento() {
+    if (error) {
+      setMensagem("Erro ao consultar banco");
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      setMensagem("Código inválido");
+      return;
+    }
+
+    const usuario = data[0];
+
     localStorage.setItem(
-      "data_referencia",
-      dataSelecionada
+      "usuario",
+      JSON.stringify(usuario)
     );
 
-    router.push("/propriedade");
-  }
-
-  function abrirRelatorios() {
-    router.push("/relatorios");
+    router.push("/data");
   }
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="bg-white border rounded-2xl shadow-xl p-8 w-full max-w-md">
 
-        <h1 className="text-3xl font-bold text-center text-black mb-2">
+        <h1 className="text-3xl font-bold text-center mb-2">
           Controle de Colheita
         </h1>
 
         <p className="text-center text-gray-500 mb-8">
-          Selecione a data da colheita
+          Digite seu código de acesso
         </p>
 
         <input
-          type="date"
-          value={dataSelecionada}
-          onChange={(e) =>
-            setDataSelecionada(e.target.value)
-          }
-          className="w-full border-2 border-gray-300 rounded-2xl p-5 text-xl mb-6"
+          type="password"
+          value={codigo}
+          onChange={(e) => setCodigo(e.target.value)}
+          placeholder="Código"
+          className="w-full border-2 border-gray-300 rounded-xl p-4 text-center text-2xl mb-6"
         />
 
         <button
-          onClick={novoLancamento}
-          className="w-full bg-black text-white rounded-2xl p-5 text-2xl font-bold mb-4"
+          onClick={entrar}
+          className="w-full bg-black text-white rounded-xl p-4 text-xl font-bold"
         >
-          NOVO LANÇAMENTO
+          ENTRAR
         </button>
 
-        <button
-          onClick={abrirRelatorios}
-          className="w-full bg-blue-700 text-white rounded-2xl p-5 text-2xl font-bold"
-        >
-          📊 RELATÓRIOS
-        </button>
+        {mensagem && (
+          <div className="mt-4 text-center font-bold text-red-600">
+            {mensagem}
+          </div>
+        )}
 
       </div>
     </div>
