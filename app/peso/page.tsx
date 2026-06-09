@@ -47,21 +47,26 @@ export default function PesoPage() {
       setCanavial(canavialStorage);
     }
 
-    carregarUltimosPesos(cortadorObj.id);
+    carregarUltimosPesos();
   }, [router]);
 
-  async function carregarUltimosPesos(cortadorId: number) {
-    const { data } = await supabase
+  async function carregarUltimosPesos() {
+    const { data, error } = await supabase
       .from("lancamentos")
       .select(`
         peso,
+        created_at,
         cortadores (
           nome
         )
       `)
-      .eq("cortador_id", cortadorId)
       .order("created_at", { ascending: false })
-      .limit(2);
+      .limit(3);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
 
     if (data) {
       setUltimosPesos(data);
@@ -74,12 +79,7 @@ export default function PesoPage() {
       return;
     }
 
-    if (
-      !usuario ||
-      !propriedade ||
-      !cortador ||
-      !dataReferencia
-    ) {
+    if (!usuario || !propriedade || !cortador || !dataReferencia) {
       setMensagem("Dados incompletos");
       return;
     }
@@ -87,18 +87,16 @@ export default function PesoPage() {
     setMensagem("");
     setSalvando(true);
 
-    const { error } = await supabase
-      .from("lancamentos")
-      .insert([
-        {
-          data_referencia: dataReferencia,
-          usuario_id: usuario.id,
-          propriedade_id: propriedade.id,
-          cortador_id: cortador.id,
-          peso: Number(peso),
-          canavial: canavial,
-        },
-      ]);
+    const { error } = await supabase.from("lancamentos").insert([
+      {
+        data_referencia: dataReferencia,
+        usuario_id: usuario.id,
+        propriedade_id: propriedade.id,
+        cortador_id: cortador.id,
+        peso: Number(peso),
+        canavial: canavial,
+      },
+    ]);
 
     setSalvando(false);
 
@@ -111,6 +109,9 @@ export default function PesoPage() {
     setMensagem("✓ Lançamento salvo com sucesso");
 
     setPeso("");
+
+    // atualiza lista imediatamente
+    carregarUltimosPesos();
 
     setTimeout(() => {
       router.push("/cortador");
@@ -126,42 +127,28 @@ export default function PesoPage() {
         </h1>
 
         <div className="mb-4 text-center">
-          <div className="text-gray-500">
-            Data
-          </div>
-
+          <div className="text-gray-500">Data</div>
           <div className="text-xl font-bold text-black">
-            {new Date(
-              dataReferencia + "T00:00:00"
-            ).toLocaleDateString("pt-BR")}
+            {new Date(dataReferencia + "T00:00:00").toLocaleDateString("pt-BR")}
           </div>
         </div>
 
         <div className="mb-4 text-center">
-          <div className="text-gray-500">
-            Propriedade
-          </div>
-
+          <div className="text-gray-500">Propriedade</div>
           <div className="text-2xl font-bold text-black">
             {propriedade?.nome}
           </div>
         </div>
 
         <div className="mb-4 text-center">
-          <div className="text-gray-500">
-            Canavial
-          </div>
-
+          <div className="text-gray-500">Canavial</div>
           <div className="text-2xl font-bold text-black">
             {canavial}
           </div>
         </div>
 
         <div className="mb-4 text-center">
-          <div className="text-gray-500">
-            Responsável
-          </div>
-
+          <div className="text-gray-500">Responsável</div>
           <div className="text-3xl font-bold text-black">
             {cortador?.nome}
           </div>
@@ -179,10 +166,7 @@ export default function PesoPage() {
           )}
 
           {ultimosPesos.map((item, index) => (
-            <div
-              key={index}
-              className="text-center text-lg font-bold"
-            >
+            <div key={index} className="text-center text-lg font-bold">
               {item.cortadores?.nome} - {item.peso} kg
             </div>
           ))}
