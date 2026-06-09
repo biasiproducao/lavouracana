@@ -17,6 +17,9 @@ export default function Home() {
       .select("*")
       .eq("codigo_acesso", codigo.trim());
 
+    console.log("DATA:", data);
+console.log("ERROR:", error);
+
     if (error) {
       setMensagem("Erro ao consultar banco");
       return;
