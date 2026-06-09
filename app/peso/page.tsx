@@ -13,6 +13,7 @@ export default function PesoPage() {
   const [propriedade, setPropriedade] = useState<any>(null);
   const [cortador, setCortador] = useState<any>(null);
   const [dataReferencia, setDataReferencia] = useState("");
+  const [canavial, setCanavial] = useState("");
 
   const [ultimosPesos, setUltimosPesos] = useState<any[]>([]);
 
@@ -23,6 +24,7 @@ export default function PesoPage() {
     const propriedadeStorage = localStorage.getItem("propriedade");
     const cortadorStorage = localStorage.getItem("cortador");
     const dataStorage = localStorage.getItem("data_referencia");
+    const canavialStorage = localStorage.getItem("canavial");
 
     if (
       !usuarioStorage ||
@@ -41,21 +43,25 @@ export default function PesoPage() {
     setCortador(cortadorObj);
     setDataReferencia(dataStorage);
 
+    if (canavialStorage) {
+      setCanavial(canavialStorage);
+    }
+
     carregarUltimosPesos(cortadorObj.id);
   }, [router]);
 
   async function carregarUltimosPesos(cortadorId: number) {
     const { data } = await supabase
-  .from("lancamentos")
-  .select(`
-    peso,
-    cortadores (
-      nome
-    )
-  `)
-  .eq("cortador_id", cortadorId)
-  .order("created_at", { ascending: false })
-  .limit(2);
+      .from("lancamentos")
+      .select(`
+        peso,
+        cortadores (
+          nome
+        )
+      `)
+      .eq("cortador_id", cortadorId)
+      .order("created_at", { ascending: false })
+      .limit(2);
 
     if (data) {
       setUltimosPesos(data);
@@ -90,6 +96,7 @@ export default function PesoPage() {
           propriedade_id: propriedade.id,
           cortador_id: cortador.id,
           peso: Number(peso),
+          canavial: canavial,
         },
       ]);
 
@@ -142,6 +149,16 @@ export default function PesoPage() {
 
         <div className="mb-4 text-center">
           <div className="text-gray-500">
+            Canavial
+          </div>
+
+          <div className="text-2xl font-bold text-black">
+            {canavial}
+          </div>
+        </div>
+
+        <div className="mb-4 text-center">
+          <div className="text-gray-500">
             Responsável
           </div>
 
@@ -161,14 +178,14 @@ export default function PesoPage() {
             </div>
           )}
 
-         {ultimosPesos.map((item, index) => (
-  <div
-    key={index}
-    className="text-center text-lg font-bold"
-  >
-    {item.cortadores?.nome} - {item.peso} kg
-  </div>
-))}
+          {ultimosPesos.map((item, index) => (
+            <div
+              key={index}
+              className="text-center text-lg font-bold"
+            >
+              {item.cortadores?.nome} - {item.peso} kg
+            </div>
+          ))}
         </div>
 
         <input
