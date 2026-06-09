@@ -7,11 +7,14 @@ import { supabase } from "../../lib/supabase";
 export default function PesoPage() {
   const [peso, setPeso] = useState("");
   const [salvando, setSalvando] = useState(false);
+  const [mensagem, setMensagem] = useState("");
 
   const [usuario, setUsuario] = useState<any>(null);
   const [propriedade, setPropriedade] = useState<any>(null);
   const [cortador, setCortador] = useState<any>(null);
   const [dataReferencia, setDataReferencia] = useState("");
+
+  const [ultimosPesos, setUltimosPesos] = useState<any[]>([]);
 
   const router = useRouter();
 
@@ -31,15 +34,32 @@ export default function PesoPage() {
       return;
     }
 
+    const cortadorObj = JSON.parse(cortadorStorage);
+
     setUsuario(JSON.parse(usuarioStorage));
     setPropriedade(JSON.parse(propriedadeStorage));
-    setCortador(JSON.parse(cortadorStorage));
+    setCortador(cortadorObj);
     setDataReferencia(dataStorage);
+
+    carregarUltimosPesos(cortadorObj.id);
   }, [router]);
+
+  async function carregarUltimosPesos(cortadorId: number) {
+    const { data } = await supabase
+      .from("lancamentos")
+      .select("peso")
+      .eq("cortador_id", cortadorId)
+      .order("created_at", { ascending: false })
+      .limit(2);
+
+    if (data) {
+      setUltimosPesos(data);
+    }
+  }
 
   async function salvar() {
     if (!peso || Number(peso) <= 0) {
-      alert("Informe um peso válido");
+      setMensagem("Informe um peso válido");
       return;
     }
 
@@ -49,10 +69,11 @@ export default function PesoPage() {
       !cortador ||
       !dataReferencia
     ) {
-      alert("Dados incompletos");
+      setMensagem("Dados incompletos");
       return;
     }
 
+    setMensagem("");
     setSalvando(true);
 
     const { error } = await supabase
@@ -71,22 +92,24 @@ export default function PesoPage() {
 
     if (error) {
       console.error(error);
-      alert("Erro ao salvar");
+      setMensagem("Erro ao salvar");
       return;
     }
 
-    alert("Lançamento salvo com sucesso!");
+    setMensagem("✓ Lançamento salvo com sucesso");
 
     setPeso("");
 
-    router.push("/cortador");
+    setTimeout(() => {
+      router.push("/cortador");
+    }, 700);
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
+    <div className="min-h-screen bg-white p-4 flex items-center justify-center">
+      <div className="bg-white border rounded-2xl shadow-xl p-6 w-full max-w-md">
 
-        <h1 className="text-3xl font-bold text-center mb-6">
+        <h1 className="text-3xl font-bold text-center text-black mb-6">
           Lançar Peso
         </h1>
 
@@ -95,9 +118,11 @@ export default function PesoPage() {
             Data
           </div>
 
-          <div className="text-xl font-bold">
-  {new Date(dataReferencia + "T00:00:00").toLocaleDateString("pt-BR")}
-</div>
+          <div className="text-xl font-bold text-black">
+            {new Date(
+              dataReferencia + "T00:00:00"
+            ).toLocaleDateString("pt-BR")}
+          </div>
         </div>
 
         <div className="mb-4 text-center">
@@ -105,19 +130,40 @@ export default function PesoPage() {
             Propriedade
           </div>
 
-          <div className="text-2xl font-bold">
+          <div className="text-2xl font-bold text-black">
             {propriedade?.nome}
           </div>
         </div>
 
-        <div className="mb-6 text-center">
+        <div className="mb-4 text-center">
           <div className="text-gray-500">
             Responsável
           </div>
 
-          <div className="text-3xl font-bold">
+          <div className="text-3xl font-bold text-black">
             {cortador?.nome}
           </div>
+        </div>
+
+        <div className="mb-6 border rounded-xl p-3 bg-gray-50">
+          <div className="text-center font-bold mb-2">
+            Últimos Lançamentos
+          </div>
+
+          {ultimosPesos.length === 0 && (
+            <div className="text-center text-gray-500">
+              Nenhum lançamento
+            </div>
+          )}
+
+          {ultimosPesos.map((item, index) => (
+            <div
+              key={index}
+              className="text-center text-xl font-bold"
+            >
+              {item.peso} kg
+            </div>
+          ))}
         </div>
 
         <input
@@ -126,16 +172,22 @@ export default function PesoPage() {
           placeholder="Peso em kg"
           value={peso}
           onChange={(e) => setPeso(e.target.value)}
-          className="w-full border-2 border-gray-300 rounded-2xl p-6 text-center text-4xl mb-6"
+          className="w-full border-2 border-gray-300 rounded-2xl p-6 text-center text-4xl mb-4"
         />
 
         <button
           onClick={salvar}
           disabled={salvando}
-          className="w-full bg-green-700 text-white text-2xl font-bold rounded-2xl p-5"
+          className="w-full bg-black text-white text-2xl font-bold rounded-2xl p-5"
         >
           {salvando ? "SALVANDO..." : "SALVAR"}
         </button>
+
+        {mensagem && (
+          <div className="mt-4 text-center font-bold text-green-600">
+            {mensagem}
+          </div>
+        )}
 
       </div>
     </div>
