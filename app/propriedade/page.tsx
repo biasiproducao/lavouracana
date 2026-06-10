@@ -20,6 +20,10 @@ export default function PropriedadePage() {
     carregarPropriedades();
   }, []);
 
+  function voltar() {
+  router.push("/data");
+}
+
   async function carregarPropriedades() {
     const { data } = await supabase
       .from("propriedades")
@@ -76,7 +80,20 @@ export default function PropriedadePage() {
 }
 
   return (
-    <div className="min-h-screen bg-white p-4">
+  <div className="min-h-screen bg-white p-4">
+
+    <div className="mb-4">
+      <button
+        onClick={voltar}
+        className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-xl font-bold"
+      >
+        ⬅ Voltar
+      </button>
+    </div>
+
+    <h1 className="text-3xl font-bold text-center mb-6">
+      Escolha o Canavial
+    </h1>
 
       <h1 className="text-3xl font-bold text-center mb-6">
         Escolha o Canavial
