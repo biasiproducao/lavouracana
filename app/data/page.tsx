@@ -37,7 +37,7 @@ export default function DataPage() {
 
   return (
  <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-  <div className="bg-white border border-gray-300 rounded-2xl shadow-xl p-6 w-full max-w-md">
+ <div className="bg-white border border-gray-300 rounded-2xl shadow-lg p-6 w-full max-w-md">
 
         <h1 className="text-3xl font-bold text-center mb-2 text-black">
           Selecione a Data
@@ -47,11 +47,11 @@ export default function DataPage() {
           Escolha a data da colheita
         </p>
 
-      <input
+     <input
   type="date"
   value={dataSelecionada}
   onChange={(e) => setDataSelecionada(e.target.value)}
-  className="w-full border border-gray-300 rounded-xl p-4 text-lg mb-6 bg-white text-black"
+  className="w-full border border-gray-300 rounded-xl p-4 text-lg bg-white text-black mb-6"
 />
 
         <button
