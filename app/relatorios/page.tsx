@@ -34,7 +34,7 @@ export default function RelatoriosPage() {
       console.error(error);
       return;
     }
-
+console.log(data);
     setLancamentos(data || []);
 
     const soma =
