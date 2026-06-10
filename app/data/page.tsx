@@ -51,7 +51,7 @@ export default function DataPage() {
   type="date"
   value={dataSelecionada}
   onChange={(e) => setDataSelecionada(e.target.value)}
-  className="w-full border border-gray-300 rounded-xl p-4 text-lg bg-white text-black mb-6"
+  className="block w-full min-w-0 border border-gray-300 rounded-xl px-3 py-3 text-base bg-white text-black mb-6"
 />
 
         <button
