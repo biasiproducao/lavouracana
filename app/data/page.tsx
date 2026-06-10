@@ -37,7 +37,7 @@ export default function DataPage() {
 
   return (
  <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
- <div className="bg-white border border-gray-300 rounded-2xl shadow-lg p-6 w-full max-w-md">
+<div className="bg-white border border-gray-300 rounded-2xl shadow-lg p-4 w-full max-w-md overflow-hidden">
 
         <h1 className="text-3xl font-bold text-center mb-2 text-black">
           Selecione a Data
