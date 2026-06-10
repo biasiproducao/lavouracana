@@ -88,6 +88,27 @@ export default function RelatoriosPage() {
         .sort((a: any, b: any) => b.peso - a.peso)
     );
   }
+  async function excluirLancamento(id: number) {
+  const confirmar = window.confirm(
+    "Deseja realmente excluir este lançamento?"
+  );
+
+  if (!confirmar) return;
+
+  const { error } = await supabase
+    .from("lancamentos")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert("Erro ao excluir lançamento");
+    return;
+  }
+
+  gerarRelatorio();
+
+  alert("Lançamento excluído com sucesso");
+}
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -255,10 +276,18 @@ export default function RelatoriosPage() {
               </h2>
 
               {lancamentos.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white border-2 rounded-2xl p-4 mb-4 shadow-sm"
-                >
+  <div
+    key={item.id}
+    className="relative bg-white border-2 rounded-2xl p-4 mb-4 shadow-sm"
+  >
+
+    <button
+      onClick={() => excluirLancamento(item.id)}
+      className="absolute top-2 right-2 text-red-600"
+      title="Excluir lançamento"
+    >
+      🗑️
+    </button>
                   <div>
                     <strong>Data:</strong>{" "}
                     {new Date(
