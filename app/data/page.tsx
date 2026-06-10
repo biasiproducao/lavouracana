@@ -36,8 +36,8 @@ export default function DataPage() {
   }
 
   return (
-  <div className="min-h-screen bg-white flex items-center justify-center p-4">
-  <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-4">
+ <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+  <div className="bg-white border border-gray-300 rounded-2xl shadow-xl p-6 w-full max-w-md">
 
         <h1 className="text-3xl font-bold text-center mb-2 text-black">
           Selecione a Data
@@ -51,7 +51,7 @@ export default function DataPage() {
   type="date"
   value={dataSelecionada}
   onChange={(e) => setDataSelecionada(e.target.value)}
-  className="block w-full border border-gray-300 rounded-xl px-4 py-3 text-lg mb-6 bg-white text-black"
+  className="w-full border border-gray-300 rounded-xl p-4 text-lg mb-6 bg-white text-black"
 />
 
         <button
