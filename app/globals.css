@@ -41,3 +41,8 @@ textarea {
   background-color: white !important;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
