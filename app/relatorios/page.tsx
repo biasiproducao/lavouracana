@@ -19,7 +19,10 @@ export default function RelatoriosPage() {
     const { data, error } = await supabase
       .from("lancamentos")
       .select(`
-  *,
+  id,
+  data_referencia,
+  peso,
+  canavial,
   cortadores(nome),
   propriedades(nome)
 `)
