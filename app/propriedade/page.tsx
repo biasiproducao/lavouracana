@@ -46,26 +46,34 @@ export default function PropriedadePage() {
   }
 
   function salvarOutro() {
-    if (!nomeCanavial.trim()) {
-      alert("Digite o nome do canavial");
-      return;
-    }
-
-    localStorage.setItem(
-      "canavial",
-      nomeCanavial.trim()
-    );
-
-    localStorage.setItem(
-      "propriedade",
-      JSON.stringify({
-        id: 0,
-        nome: "OUTROS"
-      })
-    );
-
-    router.push("/cortador");
+  if (!nomeCanavial.trim()) {
+    alert("Digite o nome do canavial");
+    return;
   }
+
+  const propriedadeOutros = propriedades.find(
+    (p) => p.nome.toUpperCase() === "OUTROS"
+  );
+
+  if (!propriedadeOutros) {
+    alert(
+      "Cadastre a propriedade OUTROS no Supabase"
+    );
+    return;
+  }
+
+  localStorage.setItem(
+    "canavial",
+    nomeCanavial.trim()
+  );
+
+  localStorage.setItem(
+    "propriedade",
+    JSON.stringify(propriedadeOutros)
+  );
+
+  router.push("/cortador");
+}
 
   return (
     <div className="min-h-screen bg-white p-4">
