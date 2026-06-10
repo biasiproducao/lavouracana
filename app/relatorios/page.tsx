@@ -36,6 +36,7 @@ export default function RelatoriosPage() {
     }
 console.log(data);
     setLancamentos(data || []);
+    alert(JSON.stringify(data?.[0], null, 2));
 
     const soma =
       data?.reduce(
