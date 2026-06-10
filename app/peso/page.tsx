@@ -63,10 +63,17 @@ export default function PesoPage() {
       .order("created_at", { ascending: false })
       .limit(3);
 
-    if (error) {
-      console.error(error);
-      return;
-    }
+   if (error) {
+  console.error(error);
+
+  alert(
+    JSON.stringify(error, null, 2)
+  );
+
+  setMensagem(error.message);
+
+  return;
+}
 
     if (data) {
       setUltimosPesos(data);
