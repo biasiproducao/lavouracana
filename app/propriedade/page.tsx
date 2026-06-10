@@ -95,11 +95,7 @@ export default function PropriedadePage() {
       Escolha o Canavial
     </h1>
 
-      <h1 className="text-3xl font-bold text-center mb-6">
-        Escolha o Canavial
-      </h1>
-
-      <div className="grid gap-4">
+       <div className="grid gap-4">
 
        {propriedades
   .filter(
