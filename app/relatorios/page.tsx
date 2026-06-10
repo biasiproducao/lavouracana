@@ -18,7 +18,11 @@ export default function RelatoriosPage() {
 
     const { data, error } = await supabase
       .from("lancamentos")
-      .select("*")
+      .select(`
+  *,
+  cortadores(nome),
+  propriedades(nome)
+`)
       .gte("data_referencia", dataInicial)
       .lte("data_referencia", dataFinal)
       .order("data_referencia");
