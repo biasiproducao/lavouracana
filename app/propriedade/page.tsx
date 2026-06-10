@@ -84,7 +84,11 @@ export default function PropriedadePage() {
 
       <div className="grid gap-4">
 
-        {propriedades.map((propriedade) => (
+       {propriedades
+  .filter(
+    (p) => p.nome.toUpperCase() !== "OUTROS"
+  )
+  .map((propriedade) => (
           <button
             key={propriedade.id}
             onClick={() =>
