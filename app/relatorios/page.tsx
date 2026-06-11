@@ -23,7 +23,7 @@ const [filtroCanavial, setFiltroCanavial] = useState("TODOS");
     setCarregando(true);
 
     const { data, error } = await supabase
-      .from("lancamentos")
+      .from("")
       .select(`
         id,
         data_referencia,
@@ -44,7 +44,7 @@ const [filtroCanavial, setFiltroCanavial] = useState("TODOS");
       return;
     }
 
-    setLancamentos(data || []);
+    set(data || []);
 
     const soma =
       data?.reduce(
@@ -99,7 +99,7 @@ const [filtroCanavial, setFiltroCanavial] = useState("TODOS");
   if (!confirmar) return;
 
   const { error } = await supabase
-    .from("lancamentos")
+    .from("")
     .delete()
     .eq("id", id);
 
@@ -115,7 +115,7 @@ const [filtroCanavial, setFiltroCanavial] = useState("TODOS");
 const cortadoresUnicos = [
   "TODOS",
   ...new Set(
-    lancamentos.map(
+    .map(
       (item) => item.cortadores?.nome || "Não informado"
     )
   ),
@@ -124,7 +124,7 @@ const cortadoresUnicos = [
 const canaviaisUnicos = [
   "TODOS",
   ...new Set(
-    lancamentos.map(
+    .map(
       (item) => item.canavial || "Não informado"
     )
   ),
@@ -147,6 +147,47 @@ const lancamentosFiltrados = lancamentos.filter((item) => {
 
   return filtroCortadorOk && filtroCanavialOk;
 });
+  const totalKgFiltrado = lancamentosFiltrados.reduce(
+  (total, item) => total + Number(item.peso || 0),
+  0
+);
+
+const rankingCortadoresFiltrado: any = {};
+const rankingCanaviaisFiltrado: any = {};
+
+lancamentosFiltrados.forEach((item: any) => {
+  const peso = Number(item.peso || 0);
+
+  const cortador =
+    item.cortadores?.nome || "Não informado";
+
+  rankingCortadoresFiltrado[cortador] =
+    (rankingCortadoresFiltrado[cortador] || 0) + peso;
+
+  const canavial =
+    item.canavial || "Não informado";
+
+  rankingCanaviaisFiltrado[canavial] =
+    (rankingCanaviaisFiltrado[canavial] || 0) + peso;
+});
+
+const rankingCortadoresExibicao = Object.entries(
+  rankingCortadoresFiltrado
+)
+  .map(([nome, peso]) => ({
+    nome,
+    peso,
+  }))
+  .sort((a: any, b: any) => b.peso - a.peso);
+
+const rankingCanaviaisExibicao = Object.entries(
+  rankingCanaviaisFiltrado
+)
+  .map(([nome, peso]) => ({
+    nome,
+    peso,
+  }))
+  .sort((a: any, b: any) => b.peso - a.peso);
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-4xl mx-auto">
