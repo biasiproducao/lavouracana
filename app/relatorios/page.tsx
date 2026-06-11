@@ -359,38 +359,30 @@ const lancamentosFiltrados = lancamentos.filter((item) => {
     >
       🗑️
     </button>
-                  <div>
-                    <strong>Data:</strong>{" "}
-                    {new Date(
-                      item.data_referencia +
-                        "T00:00:00"
-                    ).toLocaleDateString(
-                      "pt-BR"
-                    )}
-                  </div>
 
-                  <div>
-                    <strong>Cortador:</strong>{" "}
-                    {item.cortadores?.nome || "-"}
-                  </div>
+    <div>
+      <strong>Data:</strong>{" "}
+      {new Date(
+        item.data_referencia + "T00:00:00"
+      ).toLocaleDateString("pt-BR")}
+    </div>
 
-                  <div>
-                    <strong>Canavial:</strong>{" "}
-                    {item.canavial || "-"}
-                  </div>
+    <div>
+      <strong>Cortador:</strong>{" "}
+      {item.cortadores?.nome || "-"}
+    </div>
 
-                  <div className="mt-3 text-center text-3xl font-extrabold">
-                    {Number(
-                      item.peso
-                    ).toLocaleString()} kg
-                  </div>
-                </div>
-              ))}
+    <div>
+      <strong>Canavial:</strong>{" "}
+      {item.canavial || "-"}
+    </div>
 
-            </div>
+    <div className="mt-3 text-center text-3xl font-extrabold">
+      {Number(item.peso).toLocaleString()} kg
+    </div>
 
-          </>
-        )}
+  </div>
+))}
 
       </div>
     </div>
