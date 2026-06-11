@@ -346,43 +346,45 @@ const lancamentosFiltrados = lancamentos.filter((item) => {
                 Todos os Lançamentos
               </h2>
 
-              {lancamentosFiltrados.map((item) => (
-  <div
-    key={item.id}
-    className="relative bg-white border-2 rounded-2xl p-4 mb-4 shadow-sm"
-  >
+                           {lancamentosFiltrados.map((item) => (
+                <div
+                  key={item.id}
+                  className="relative bg-white border-2 rounded-2xl p-4 mb-4 shadow-sm"
+                >
+                  <button
+                    onClick={() => excluirLancamento(item.id)}
+                    className="absolute top-2 right-2 text-red-600"
+                    title="Excluir lançamento"
+                  >
+                    🗑️
+                  </button>
 
-    <button
-      onClick={() => excluirLancamento(item.id)}
-      className="absolute top-2 right-2 text-red-600"
-      title="Excluir lançamento"
-    >
-      🗑️
-    </button>
+                  <div>
+                    <strong>Data:</strong>{" "}
+                    {new Date(
+                      item.data_referencia + "T00:00:00"
+                    ).toLocaleDateString("pt-BR")}
+                  </div>
 
-    <div>
-      <strong>Data:</strong>{" "}
-      {new Date(
-        item.data_referencia + "T00:00:00"
-      ).toLocaleDateString("pt-BR")}
-    </div>
+                  <div>
+                    <strong>Cortador:</strong>{" "}
+                    {item.cortadores?.nome || "-"}
+                  </div>
 
-    <div>
-      <strong>Cortador:</strong>{" "}
-      {item.cortadores?.nome || "-"}
-    </div>
+                  <div>
+                    <strong>Canavial:</strong>{" "}
+                    {item.canavial || "-"}
+                  </div>
 
-    <div>
-      <strong>Canavial:</strong>{" "}
-      {item.canavial || "-"}
-    </div>
+                  <div className="mt-3 text-center text-3xl font-extrabold">
+                    {Number(item.peso).toLocaleString()} kg
+                  </div>
+                </div>
+              ))}
+            </div>
 
-    <div className="mt-3 text-center text-3xl font-extrabold">
-      {Number(item.peso).toLocaleString()} kg
-    </div>
-
-  </div>
-))}
+          </>
+        )}
 
       </div>
     </div>
