@@ -16,6 +16,9 @@ export default function RelatoriosPage() {
   const [rankingCortadores, setRankingCortadores] = useState<any[]>([]);
   const [rankingCanaviais, setRankingCanaviais] = useState<any[]>([]);
 
+  const [filtroCortador, setFiltroCortador] = useState("TODOS");
+const [filtroCanavial, setFiltroCanavial] = useState("TODOS");
+
   async function gerarRelatorio() {
     setCarregando(true);
 
@@ -109,7 +112,41 @@ export default function RelatoriosPage() {
 
   alert("Lançamento excluído com sucesso");
 }
+const cortadoresUnicos = [
+  "TODOS",
+  ...new Set(
+    lancamentos.map(
+      (item) => item.cortadores?.nome || "Não informado"
+    )
+  ),
+];
 
+const canaviaisUnicos = [
+  "TODOS",
+  ...new Set(
+    lancamentos.map(
+      (item) => item.canavial || "Não informado"
+    )
+  ),
+];
+
+const lancamentosFiltrados = lancamentos.filter((item) => {
+  const cortador =
+    item.cortadores?.nome || "Não informado";
+
+  const canavial =
+    item.canavial || "Não informado";
+
+  const filtroCortadorOk =
+    filtroCortador === "TODOS" ||
+    cortador === filtroCortador;
+
+  const filtroCanavialOk =
+    filtroCanavial === "TODOS" ||
+    canavial === filtroCanavial;
+
+  return filtroCortadorOk && filtroCanavialOk;
+});
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-4xl mx-auto">
@@ -162,6 +199,40 @@ export default function RelatoriosPage() {
               ? "GERANDO..."
               : "GERAR RELATÓRIO"}
           </button>
+
+<div className="mt-4 grid gap-3">
+
+  <select
+    value={filtroCortador}
+    onChange={(e) =>
+      setFiltroCortador(e.target.value)
+    }
+    className="w-full border rounded-xl p-3"
+  >
+    {cortadoresUnicos.map((nome) => (
+      <option key={nome} value={nome}>
+        Responsável: {nome}
+      </option>
+    ))}
+  </select>
+
+  <select
+    value={filtroCanavial}
+    onChange={(e) =>
+      setFiltroCanavial(e.target.value)
+    }
+    className="w-full border rounded-xl p-3"
+  >
+    {canaviaisUnicos.map((nome) => (
+      <option key={nome} value={nome}>
+        Canavial: {nome}
+      </option>
+    ))}
+  </select>
+
+</div>
+
+</div>
 
         </div>
 
@@ -275,7 +346,7 @@ export default function RelatoriosPage() {
                 Todos os Lançamentos
               </h2>
 
-              {lancamentos.map((item) => (
+              {lancamentosFiltrados.map((item) => (
   <div
     key={item.id}
     className="relative bg-white border-2 rounded-2xl p-4 mb-4 shadow-sm"
