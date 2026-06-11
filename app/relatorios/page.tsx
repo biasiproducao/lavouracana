@@ -234,8 +234,7 @@ const lancamentosFiltrados = lancamentos.filter((item) => {
 
 </div>
 
-        </div>
-
+       
         {lancamentos.length > 0 && (
           <>
 
